@@ -2,9 +2,18 @@ var listChak = "0";
 var arrayTest;
 var tagData = [];
 
+//모바일커밋테스트
 //카톡봇 기본 이벤트함수
 function response(room, msg, sender, isGroupChat, replier) {
 try {
+
+//명령어모음
+var eList = ["1. /명령어목록","2. /수로확인","3. /캐릭터정보","4. /이벤트목록"];
+if (msg == "/명령어목록") {
+for (var n = 0; n < eList.length; n++) {
+var comText = eList[n];
+replier.reply(comText);
+}}
 
 //수로일정체크&알림
 var timeSet = new Date();
@@ -20,8 +29,10 @@ listChak = "0";
 if (hourSet == "21" && minuteSet == "30") {
 listChak++;
 } else if (listChak == "3" && daySet == "6") {
+	var timeSum = 21-hourSet+"시"+60-minuteSet+"분";
 replier.reply("Fals, 수로 진행일은 맞지만 진행시간이 아닙니다.");
 replier.reply("진행예정 시간:오후10시");
+replier.reply("진행예정 시간까지 앞으로 "+timeSum+" 남았습니다.");
 }
 else {
 listChak = "0";
@@ -67,14 +78,13 @@ replier.reply(talkPush);
 //이벤트목록파싱
 if (msg == "/이벤트목록") {
     var result = Utils.parse("https://maplestory.nexon.com/News/Event");
-    result = result.select("div.event_board > li").text();
+    result = result.select("div.event_board").select("ul").select("li").text();
     replier.reply(result);
 }
-
+//addScript
 } catch (Err) {
 Log.e(Err);
 }
-//addScript
 }
 
 /*
