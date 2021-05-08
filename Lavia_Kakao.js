@@ -22,6 +22,9 @@ function response(room, msg, sender, isGroupChat, replier) {
                 replier.reply("토요일 10시 수로 "+(60-minuteSet)+"분전 입니다.");
                 replier.reply("간부분들께서는 진행을 위해 미리 준비해주시고. 노예분들께서는 도핑과 같은것들을 미리 준비해주시기 바랍니다.");
                 //함수추가로 기능추가 예정
+            } else if (dayMatch == "5" && hourSet > "21") {
+                var timeSum = (23-hourSet)+"시"+(60-minuteSet)+"분";
+                replier.reply("수로진행예정 시간으로부터 "+timeSet+" 초과되었습니다.");
             } else if (dayMatch == "5") {
                 var timeSum = (21-hourSet)+"시"+(60-minuteSet)+"분";
                 replier.reply("오늘은 "+comText+"요일 이기에 수로 진행일은 맞지만 진행시간이 아닙니다.");
