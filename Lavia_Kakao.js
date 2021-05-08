@@ -19,19 +19,19 @@ function response(room, msg, sender, isGroupChat, replier) {
         var comText = dayList[dayMatch];
         if (room == "스카니아 Lavia길드" && msg == "/수로확인") {
             if (dayMatch == "5" && hourSet == "21" && minuteSet >= "30") {
-                replier.reply("True, 토요일 10시 수로 30분전 입니다.");
+                replier.reply("토요일 10시 수로 "+(60-minuteSet)+"분전 입니다.");
                 replier.reply("간부분들께서는 진행을 위해 미리 준비해주시고. 노예분들께서는 도핑과 같은것들을 미리 준비해주시기 바랍니다.");
                 //함수추가로 기능추가 예정
-            } else if (hourSet ==! "21" && minuteSet >=! "30") {
+            } else if (dayMatch == "5") {
                 var timeSum = (21-hourSet)+"시"+(60-minuteSet)+"분";
-                replier.reply("오늘은 "+comText+"요일이기에 수로 진행일은 맞지만 진행시간이 아닙니다.");
+                replier.reply("오늘은 "+comText+"요일 이기에 수로 진행일은 맞지만 진행시간이 아닙니다.");
                 replier.reply("진행예정 시간까지 앞으로 "+timeSum+" 남았습니다.");
                 replier.reply("진행예정 시간: 오후10시");
             } else if (dayMatch <= "4") {
-                replier.reply("오늘은 "+comText+"요일이기에 수로 진행일이 아닙니다.");
+                replier.reply("오늘은 "+comText+"요일 이기에 수로 진행일이 아닙니다.");
                 replier.reply("수로는 매주 토요일 오후 10시로 고정이며, "+(6-daySet)+"일 남았습니다.");
-            } else if (dayMatch == "6") {
-                replier.reply("오늘은 "+comText+"요일이기에 수로 진행일이 아닙니다.");
+            } else {
+                replier.reply("오늘은 "+comText+"요일 이기에 수로 진행일이 아닙니다.");
                 replier.reply("수로는 매주 토요일 오후 10시로 고정이며, "+dayMatch+"일 남았습니다.");
             }
         }
