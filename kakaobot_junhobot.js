@@ -9,10 +9,6 @@ const scriptName = "Junho_Bot2";
  * (string) packageName
  */
 const Jsoup = org.jsoup.Jsoup;
-let year = new Date();
-
-
-
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
 try { 
@@ -27,34 +23,35 @@ replier.reply(err);
 	
 naverUrl = (query) => {
 	try {
-res = JSON.parse(
-Jsoup.connect("https://openapi.naver.com/v1/util/shorturl")
-.data('url',query)
-.header('X-Naver-Client-Id','B6aSybGBcrJtMwP719DF')
-.header('X-Naver-Client-Secret','UvLZH2ToRM')
-.ignoreContentType(true)
-.ignoreHttpErrors(true)
-.get()
-.text()).result.url;
-return res;
-} catch (err) {
+		res = JSON.parse(
+			Jsoup.connect("https://openapi.naver.com/v1/util/shorturl")
+			.data('url',query)
+			.header('X-Naver-Client-Id','B6aSybGBcrJtMwP719DF')
+			.header('X-Naver-Client-Secret','UvLZH2ToRM')
+			.ignoreContentType(true)
+			.ignoreHttpErrors(true)
+			.get()
+			.text()).result.url;
+		return res;
+	} catch (err) {
 		Log.e(err);
 	}
 };
 
-naverSearch = (year, month, day, query) => {
-  try {
-  res = JSON.parse(
-  Jsoup.connet("https://openapi.naver.com/v1/datalab/search")
-  .data('startDate', `${year}-${month}-${day}`)
-  .data('endDate', `${year}-${month+1}-${day}`)
-  .data('timeUnit', `$))
-    "startDate": "2017-01-01",
-    "endDate": "2017-04-30",
-    "timeUnit": "month",
-    "keywordGroups": 
-    [ { "groupName": "한글", "keywords": [ "한글", "korean" ] }, { "groupName": "영어", "keywords": [ "영어", "english" ] } ];
-    } catch (err) {
+naverSearch = (year, month, day) => {
+	try {
+		res = JSON.parse(
+			Jsoup.connet("https://openapi.naver.com/v1/datalab/search")
+			.data('startDate', `${year}-${month}-${day}`)
+			.data('endDate', `${year}-${month+1}-${day}`)
+			.header('timeUnit', "month")
+			.header('keywordGroups', [ { "groupName": "한글", "keywords": [ "한글", "korean" ] }, { "groupName": "영어", "keywords": [ "영어", "english" ]}])
+			.ignoreContentType(true)
+			.ignoreHttpErrors(true)
+			.get()
+			.text()).result.title;
+		return res;
+	} catch (err) {
       Log.e(err);
-    }
-}
+	}
+};
