@@ -10,15 +10,26 @@ const scriptName = "Junho_Bot2";
   */ 
  const Jsoup = org.jsoup.Jsoup; 
   
+ const Jsoup = org.jsoup.Jsoup; 
+ const naverId = 'B6aSybGBcrJtMwP719DF';
+ const naverPw = 'UvLZH2ToRM';
+
+  
  function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
  try {  
  var data = msg.split(" "); 
  if (data[0] == "/링크줄이기") { 
  replier.reply("줄여진 링크 : "+naverUrl(data[1])); 
  }
- if (data[0] == "/트랜드") {
-   replier.reply(naverSearch(data[1], data[2], data[3]));
- }
+ if (msg.startsWith("/사전 ")) {
+   msg.slice(4);
+   replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1])));
+   replier.reply(naverSearch(data[1]));
+    }
+    if (msg.startsWith("/Eval ")) {
+      msg.slice(6);
+      replier.reply(eval(data[1]));
+    }
  } catch(err) { 
  Log.e(err); 
  replier.reply(err); 
@@ -30,8 +41,8 @@ const scriptName = "Junho_Bot2";
                  res = JSON.parse( 
                          Jsoup.connect("https://openapi.naver.com/v1/util/shorturl") 
                          .data('url',query) 
-                         .header('X-Naver-Client-Id','B6aSybGBcrJtMwP719DF') 
-                         .header('X-Naver-Client-Secret','UvLZH2ToRM') 
+                         .header('X-Naver-Client-Id', naverId) 
+                         .header('X-Naver-Client-Secret', naverPw) 
                          .ignoreContentType(true) 
                          .ignoreHttpErrors(true) 
                          .get() 
@@ -39,23 +50,24 @@ const scriptName = "Junho_Bot2";
                  return res; 
          } catch (err) { 
                  Log.e(err); 
+                 return err;
          } 
  }; 
   
- naverSearch = (year, month, day) => { 
+ naverSearch = (query) => { 
          try { 
-                 res = JSON.parse( 
-                         Jsoup.connect("https://openapi.naver.com/v1/datalab/search") 
-                         .data('startDate', `${year}-${month}-${day}`) 
-                         .data('endDate', `${year}-${month+1}-${day}`) 
-                         .header('timeUnit', "month") 
-                         .header('keywordGroups', [ { "groupName": "한글", "keywords": [ "한글", "korean" ] }, { "groupName": "영어", "keywords": [ "영어", "english" ]}]) 
+           
+           res0 = JSON.parse( 
+                         Jsoup.connect("https://openapi.naver.com/v1/search/encyc.json") 
+                         .data('query',query)
+                         .header('X-Naver-Client-Id',naverId) 
+                         .header('X-Naver-Client-Secret',naverPw) 
                          .ignoreContentType(true) 
                          .ignoreHttpErrors(true) 
-                         .get() 
-                         .text()).results.keywords; 
-                 return res; 
+                         .get().text()).items.length;
+                 return res0; 
          } catch (err) { 
        Log.e(err); 
+       return err;
          } 
  };
