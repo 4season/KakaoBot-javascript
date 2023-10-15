@@ -67,7 +67,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .header('X-Naver-Client-Secret',naverPw) 
                         .ignoreContentType(true) 
                         .ignoreHttpErrors(true) 
-                        .get().text()).items[res0];        
+                        .get().text()).items[0, ...res0];        
                 return res1; 
         } catch (err) { 
                 Log.e(err); 
