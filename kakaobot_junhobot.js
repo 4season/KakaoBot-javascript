@@ -10,11 +10,6 @@ const scriptName = "Junho_Bot2";
   */ 
  const Jsoup = org.jsoup.Jsoup; 
   
- const Jsoup = org.jsoup.Jsoup; 
- const naverId = 'B6aSybGBcrJtMwP719DF';
- const naverPw = 'UvLZH2ToRM';
-
-  
  function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
  try {  
  var data = msg.split(" "); 
