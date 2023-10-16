@@ -51,8 +51,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
   naverSearch = (query, num) => { 
         try { 
+                links = "https://openapi.naver.com/v1/search/encyc.json";
                 res0 = JSON.parse( 
-                        Jsoup.connect("https://openapi.naver.com/v1/search/encyc.json") 
+                        Jsoup.connect(links) 
                         .data('query',query)
                         .header('X-Naver-Client-Id',naverId) 
                         .header('X-Naver-Client-Secret',naverPw) 
@@ -61,7 +62,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .get().text()).items.length;
 
                 res1 = JSON.parse( 
-                        Jsoup.connect("https://openapi.naver.com/v1/search/encyc.json") 
+                        Jsoup.connect(links) 
                         .data('query',query)
                         .header('X-Naver-Client-Id',naverId) 
                         .header('X-Naver-Client-Secret',naverPw) 
@@ -69,7 +70,36 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].title;
                                 
-                return [num+" /", res0+"페이지", res1];
+                res2 = JSON.parse( 
+                        Jsoup.connect(links) 
+                        .data('query',query)
+                        .header('X-Naver-Client-Id',naverId) 
+                        .header('X-Naver-Client-Secret',naverPw) 
+                        .ignoreContentType(true) 
+                        .ignoreHttpErrors(true) 
+                        .get().text()).items[num].link;
+
+                res3 = JSON.parse( 
+                        Jsoup.connect(links) 
+                        .data('query',query)
+                        .header('X-Naver-Client-Id',naverId) 
+                        .header('X-Naver-Client-Secret',naverPw) 
+                        .ignoreContentType(true) 
+                        .ignoreHttpErrors(true) 
+                        .get().text()).items[num].description;
+
+                res4 = JSON.parse( 
+                        Jsoup.connect(links) 
+                        .data('query',query)
+                        .header('X-Naver-Client-Id',naverId) 
+                        .header('X-Naver-Client-Secret',naverPw) 
+                        .ignoreContentType(true) 
+                        .ignoreHttpErrors(true) 
+                        .get().text()).items[num].thumbnail;
+
+                        var Response = num+" / "+res0+"페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
+
+                return Response;
         } catch (err) { 
                 Log.e(err); 
                 return err;
