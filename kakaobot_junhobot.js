@@ -17,13 +17,11 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         replier.reply("줄여진 링크 : "+naverUrl(data[1])); 
                 }
                 if (msg.startsWith("/사전 ")) {
-                        msg.slice(4);
                         //replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1], data[2])));
-                        replier.reply(naverSearch(data[1], data[2]));
+                        replier.reply(naverSearch(msg.slice(4), msg.slice(6)));
                 }
                 if (msg.startsWith("/Eval ")) {
-                        msg.slice(6);
-                        replier.reply(eval(data[1]));
+                        replier.reply(eval(msg.slice(6)));
                 }
         } catch(err) { 
                 Log.e(err); 
@@ -97,12 +95,12 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].thumbnail;
 
-                        let Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
+                let Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
                         
-                        if (Response.search(/<\/b>/g) != -1) {
-                                Response.replace(/<\/b>/g,"");
-                                return Response;
-                        }
+                if (Response.search(/<\/b>/g) != -1) {
+                        Result = Response.replace(/<\/b>/g,"");
+                        return Result;
+                }
         } catch (err) { 
                 Log.e(err); 
                 return err;
