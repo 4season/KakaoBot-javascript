@@ -32,6 +32,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                   }
                 }
 
+                if (msg.startsWith("/뉴스 ")) {
+                        if (data[2] >= 0 && data[2] < 11) {
+                            replier.reply(naverImege(data[1], data[2]));
+                        } else {
+                              replier.reply("잘못된 검색 입니다.\nex) /뉴스 네이버 0");
+                        }
+                }
+
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
                 }
@@ -150,3 +158,23 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 return err;
         }
  };
+
+ naverNews = (query, num) => {
+        try {
+                res = JSON.parse( 
+                        Jsoup.connect("https://openapi.naver.com/v1/search/news.json") 
+                       .data('query',query) 
+                       .header('X-Naver-Client-Id', naverId) 
+                       .header('X-Naver-Client-Secret', naverPw) 
+                       .ignoreContentType(true) 
+                       .ignoreHttpErrors(true) 
+                       .get() 
+                       .text()).items[num];
+
+                       result = num+" / "+res.title+"\n"+res.link+"\n"+res.description;
+                       return result;
+        } catch (err) {
+                Log.e(err);
+                return err;
+        }
+ }
