@@ -12,13 +12,16 @@ const scriptName = "Junho_Bot2";
   
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
         try {  
-                var data = msg.split(" "); 
-                if (data[0] == "/링크줄이기") { 
-                        replier.reply("줄여진 링크 : "+naverUrl(data[1])); 
+          let data = msg.split(" ");
+                if (msg.startsWith("/링크줄이기 ")) { 
+                        replier.reply("줄여진 링크 : "+naverUrl(msg.slice(7))); 
                 }
                 if (msg.startsWith("/사전 ")) {
-                        //replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1], data[2])));
-                        replier.reply(naverSearch(msg.slice(4), msg.slice(6)));
+                        if (0 <= data[2] <= Res0) {
+                                replier.reply(naverSearch(data[1], data[2]));
+                        } 
+                } else  {
+                        replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
                 }
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
@@ -67,7 +70,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreContentType(true) 
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].title;
-                                
+
                 res2 = JSON.parse( 
                         Jsoup.connect(links) 
                         .data('query',query)
@@ -95,12 +98,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].thumbnail;
 
-                let Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
                         
-                if (Response.search(/<\/b>/g) != -1) {
-                        Result = Response.replace(/<\/b>/g,"");
-                        return Result;
-                }
+                        let Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
+
+                        if (Response.search(/<\/b>/g) != -1) {
+                                Result = Response.replace(/<\/b>/g,"");
+                                return Result;
+                        }
         } catch (err) { 
                 Log.e(err); 
                 return err;
