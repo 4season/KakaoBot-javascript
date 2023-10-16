@@ -23,9 +23,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                                 replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
                         }
                 }  
-                
+
                 if (msg.startsWith("/이미지 ")) {
-                        replier.reply(JSON.stringify(naverImege(data[1])));
+                  if (data[2] >= 0 && data[2] < 11) {
+                      replier.reply(naverImege(data[1], data[2]));
+                  } else {
+                        replier.reply("잘못된 검색 입니다.\nex) /이미지 네이버 0");
+                  }
                 }
 
                 if (msg.startsWith("/Eval ")) {
@@ -116,20 +120,33 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         } 
  };
 
- naverImege = (query) => {
+ naverImege = (query, num) => {
         try {
-        res = JSON.parse( 
+        res0 = JSON.parse( 
                 Jsoup.connect("https://openapi.naver.com/v1/search/image") 
-                .data('url',query) 
+                .data('query',query) 
                 .header('X-Naver-Client-Id', naverId) 
                 .header('X-Naver-Client-Secret', naverPw) 
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .get() 
-                .text());
-                return res;
+                .text()).items.length;
+          
+        res1 = JSON.parse( 
+                Jsoup.connect("https://openapi.naver.com/v1/search/image") 
+                .data('query',query) 
+                .header('X-Naver-Client-Id', naverId) 
+                .header('X-Naver-Client-Secret', naverPw) 
+                .ignoreContentType(true) 
+                .ignoreHttpErrors(true) 
+                .get() 
+                .text()).items[num].thumbnail;
+                
+                result = num+" / "+res0+" 이미지\n"+res1;
+                
+                return result;
         } catch (err) {
                 Log.e(err);
                 return err;
         }
- }
+ };
