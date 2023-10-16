@@ -25,11 +25,11 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }  
 
                 if (msg.startsWith("/이미지 ")) {
-                  if (data[2] >= 0 && data[2] < 11) {
-                      replier.reply(naverImege(data[1], data[2]));
-                  } else {
+                        if (data[2] >= 0 && data[2] < 11) {
+                                replier.reply(naverImege(data[1], data[2]));
+                        } else {
                         replier.reply("잘못된 검색 입니다.\nex) /이미지 네이버 0");
-                  }
+                        }
                 }
 
                 if (msg.startsWith("/뉴스 ")) {
