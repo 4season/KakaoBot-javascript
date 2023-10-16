@@ -18,7 +18,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }
                 if (msg.startsWith("/사전 ")) {
                         msg.slice(4);
-                        //replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1], data[2])));
+                        replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1], data[2])));
                         replier.reply(naverSearch(data[1], data[2]));
                 }
                 if (msg.startsWith("/Eval ")) {
@@ -97,13 +97,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].thumbnail;
 
-                        var Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+newR1+"\n"+"링크 : "+newR2+"\n"+"내용 : "+newR3+"\n"+"미리보기 : "+newR4;
+                        let newR1 = res1.replace("</b>","");
+                        let newR2 = res2.replace("</b>","");
+                        let newR3 = res3.replace("</b>","");
+                        let newR4 = res4.replace("</b>","");
+                        let Result = num+" / "+res0+" 페이지\n"+"검색결과 : "+newR1+"\n"+"링크 : "+newR2+"\n"+"내용 : "+newR3+"\n"+"미리보기 : "+newR4;
                         //var ResNum = JSON.stringify(Response).length;
-                        var newR1 = JSON.stringify(res1.replace("</b>",""));
-                        var newR2 = JSON.stringify(res2.replace("</b>",""));
-                        var newR3 = JSON.stringify(res3.replace("</b>",""));
-                        var newR4 = JSON.stringify(res4.replace("</b>",""));
-                        Result = Response.replace("</b>","");
+                        //Result = Response.replace("</b>","");
                 return Result;
         } catch (err) { 
                 Log.e(err); 
