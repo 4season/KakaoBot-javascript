@@ -18,8 +18,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }
                 if (msg.startsWith("/사전 ")) {
                         msg.slice(4);
-                        replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1])));
-                        replier.reply(naverSearch(data[1]));
+                        replier.reply("사전 검색 결과\n"+JSON.stringify(naverSearch(data[1], data[2])));
+                        replier.reply(naverSearch(data[1], data[2]));
                 }
                 if (msg.startsWith("/Eval ")) {
                         msg.slice(6);
@@ -29,8 +29,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 Log.e(err); 
                 replier.reply(err); 
         }
-};
-  
+}
+
  naverUrl = (query) => { 
         try { 
                 res = JSON.parse( 
@@ -48,8 +48,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 return err;
         } 
  }; 
-  
- naverSearch = (query) => { 
+
+  naverSearch = (query, num) => { 
         try { 
                 res0 = JSON.parse( 
                         Jsoup.connect("https://openapi.naver.com/v1/search/encyc.json") 
@@ -59,7 +59,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreContentType(true) 
                         .ignoreHttpErrors(true) 
                         .get().text()).items.length;
-                
+
                 res1 = JSON.parse( 
                         Jsoup.connect("https://openapi.naver.com/v1/search/encyc.json") 
                         .data('query',query)
@@ -67,8 +67,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .header('X-Naver-Client-Secret',naverPw) 
                         .ignoreContentType(true) 
                         .ignoreHttpErrors(true) 
-                        .get().text()).items[0, ...res0];        
-                return res1; 
+                        .get().text()).items[num].title;
+                                
+                return [num+" /", res0+"페이지", res1];
         } catch (err) { 
                 Log.e(err); 
                 return err;
