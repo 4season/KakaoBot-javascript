@@ -12,19 +12,22 @@ const Jsoup = org.jsoup.Jsoup;
   
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
         try {  
-          let data = msg.split(" ");
-          var Res0 = 0;
+          var data = msg.split(" ");
                 if (msg.startsWith("/링크줄이기 ")) { 
                         replier.reply("줄여진 링크 : "+naverUrl(msg.slice(7))); 
                 }
-                if (msg.startsWith("/사전 " && Res0 >= data[2] >= 0)) {
-                        replier.reply(naverSearch(data[1], data[2]));
-                } else {
-                        replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
-                }
+                if (msg.startsWith("/사전 ")) {
+                        if (data[2] >= 0 && data[2] < 11) {
+                                replier.reply(naverSearch(data[1], data[2]));
+                        } else {
+                                replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
+                        }
+                }  
+                
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
                 }
+
         } catch(err) { 
                 Log.e(err); 
                 replier.reply(err); 
@@ -60,7 +63,6 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreContentType(true) 
                         .ignoreHttpErrors(true) 
                         .get().text()).items.length;
-                        Res0 = res0;
 
                 res1 = JSON.parse( 
                         Jsoup.connect(links) 
