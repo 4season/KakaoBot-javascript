@@ -8,7 +8,8 @@ const scriptName = "Junho_Bot2";
   * (string) imageDB.getProfileBase64() 
   * (string) packageName 
   */ 
- const Jsoup = org.jsoup.Jsoup; 
+const Jsoup = org.jsoup.Jsoup; 
+var Res0;
   
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
         try {  
@@ -16,11 +17,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 if (msg.startsWith("/링크줄이기 ")) { 
                         replier.reply("줄여진 링크 : "+naverUrl(msg.slice(7))); 
                 }
-                if (msg.startsWith("/사전 ")) {
-                        if (0 <= data[2] <= Res0) {
-                                replier.reply(naverSearch(data[1], data[2]));
-                        } 
-                } else  {
+                if (msg.startsWith("/사전 " && Res0 >= data[2] >= 0)) {
+                        replier.reply(naverSearch(data[1], data[2]));
+                } else {
                         replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
                 }
                 if (msg.startsWith("/Eval ")) {
@@ -98,7 +97,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].thumbnail;
 
-                        
+                        Res0 = res0;
                         let Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
 
                         if (Response.search(/<\/b>/g) != -1) {
