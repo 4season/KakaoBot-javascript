@@ -97,8 +97,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].thumbnail;
 
-                        var Response = num+" / "+res0+"페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
-                        var ResNum = Response.length();
+                        var Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
+                        var ResNum = Response.toString().length();
                         for (var i = 0; i <= ResNum; i++) { 
                                 Result = Response.replace("</b>","");
                         }
