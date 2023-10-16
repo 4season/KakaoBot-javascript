@@ -97,11 +97,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .ignoreHttpErrors(true) 
                         .get().text()).items[num].thumbnail;
 
-                        var Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
-                        var ResNum = Response.toString().length();
-                        for (var i = 0; i <= ResNum; i++) { 
+                        var Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4+"\n"+lufe;
+                        var ResNum = JSON.stringify(Response).length;
+                        var lufe = 0;
+                        for (var i = 0; i < ResNum; i++) { 
                                 Result = Response.replace("</b>","");
+                                lufe++;
                         }
+                        setTimeout(() => console.log("than"), 3000);
                 return Result;
         } catch (err) { 
                 Log.e(err); 
