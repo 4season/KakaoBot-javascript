@@ -98,11 +98,11 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         .get().text()).items[num].thumbnail;
 
                         let Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+res1+"\n"+"링크 : "+res2+"\n"+"내용 : "+res3+"\n"+"미리보기 : "+res4;
-                        msg = Response.includes("</b>");
-                        if (msg == true) {
+                        
+                        if (Response.search(/<\/b>/g) != -1) {
                                 Response.replace(/<\/b>/g,"");
+                                return Response;
                         }
-                return Response;
         } catch (err) { 
                 Log.e(err); 
                 return err;
