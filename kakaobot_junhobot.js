@@ -24,6 +24,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         }
                 }  
                 
+                if (msg.startsWith("/이미지 ")) {
+                        replier.reply(JSON.stringify(naverImege(data[1])));
+                }
+
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
                 }
@@ -104,10 +108,28 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
                         if (Response.search(/<\/b>/g) != -1) {
                                 Result = Response.replace(/<\/b>/g,"");
-                                return Result, Res0;
+                                return Result;
                         }
         } catch (err) { 
                 Log.e(err); 
                 return err;
         } 
  };
+
+ naverImege = (query) => {
+        try {
+        res = JSON.parse( 
+                Jsoup.connect("https://openapi.naver.com/v1/search/image") 
+                .data('url',query) 
+                .header('X-Naver-Client-Id', naverId) 
+                .header('X-Naver-Client-Secret', naverPw) 
+                .ignoreContentType(true) 
+                .ignoreHttpErrors(true) 
+                .get() 
+                .text());
+                return res;
+        } catch (err) {
+                Log.e(err);
+                return err;
+        }
+ }
