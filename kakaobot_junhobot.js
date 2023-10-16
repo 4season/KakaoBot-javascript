@@ -99,10 +99,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
                         var Response = num+" / "+res0+" 페이지\n"+"검색결과 : "+newR1+"\n"+"링크 : "+newR2+"\n"+"내용 : "+newR3+"\n"+"미리보기 : "+newR4;
                         //var ResNum = JSON.stringify(Response).length;
-                        var newR1 = res1.replace("</b>","");
-                        var newR2 = res2.replace("</b>","");
-                        var newR3 = res3.replace("</b>","");
-                        var newR4 = res4.replace("</b>","");
+                        var newR1 = JSON.stringify(res1).replace("</b>","");
+                        var newR2 = JSON.stringify(res2).replace("</b>","");
+                        var newR3 = JSON.stringify(res3).replace("</b>","");
+                        var newR4 = JSON.stringify(res4).replace("</b>","");
                         Result = Response.replace("</b>","");
                 return Result;
         } catch (err) { 
