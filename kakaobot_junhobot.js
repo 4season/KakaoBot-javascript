@@ -156,7 +156,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .post() 
-                .text()).Generation[Ran].text;
+                .text()).generations[Ran].text;
 
                 //result = JSON.stringify(res);
 
