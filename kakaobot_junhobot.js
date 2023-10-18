@@ -145,22 +145,21 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
  kakaoKogpt = (query) => {
         try {
 
-        Ran = Math.floor(Math.random()*(10-1)+1);
+        Ran = Math.floor(Math.random()*(6-1)+1);
         
         res = JSON.parse( 
                 Jsoup.connect("https://api.kakaobrain.com/v1/inference/kogpt/generation") 
                 .data('prompt',query) 
-                .data('max_tokens', 120)
+                .data('max_tokens', 360)
                 .header('Authorization', 'KakaoAK '+kakaoRes)
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .post() 
                 .text()).Generation[Ran].text;
 
-                result = JSON.stringify(res);
-                resultUrl = naverUrl(result);
+                //result = JSON.stringify(res);
 
-                return resultUrl;
+                return res;
         } catch (err) {
                 Log.e(err);
                 return err;
