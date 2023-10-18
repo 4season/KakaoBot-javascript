@@ -25,21 +25,28 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }  
 
                 if (msg.startsWith("/이미지 ")) {
-                        if (data[2] >= 0 && data[2] < 11) {
-                                replier.reply(naverImege(data[1], data[2]));
+                        if (msg.indexOf('/이미지') != -1) {
+                                replier.reply(kakaoImege(msg.slice(5)));
                         } else {
-                        replier.reply("잘못된 검색 입니다.\nex) /이미지 네이버 0");
+                        replier.reply("잘못된 이미지 검색 입니다.\nex) /이미지 카카오");
+                        }
+                }
+                if (msg.startsWith("/영상 ")) {
+                        if (msg.indexOf('/영상') != -1) {
+                                replier.reply(kakaoVclip(msg.slice(4)));
+                        } else {
+                        replier.reply("잘못된 영상 검색 입니다.\nex) /영상 카카오");
                         }
                 }
 
-                if (msg.startsWith("/뉴스 ")) {
-                        if (data[2] >= 0 && data[2] < 11) {
-                            replier.reply(naverImege(data[1], data[2]));
+                if (msg.startsWith("/웹검색 ")) {
+                        if (msg.indexOf('/웹검색') != -1) {
+                            replier.reply(JSON.stringify(naverWews(msg.slice(5))));
                         } else {
-                              replier.reply("잘못된 검색 입니다.\nex) /뉴스 네이버 0");
+                              replier.reply("잘못된 검색 입니다.\nex) /웹검색 네이버");        
                         }
                 }
-
+                
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
                 }
@@ -128,53 +135,71 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         } 
  };
 
- naverImege = (query, num) => {
+ kakaoImege = (query) => {
         try {
-        res0 = JSON.parse( 
-                Jsoup.connect("https://openapi.naver.com/v1/search/image") 
+
+        Ran = Math.floor(Math.random()*(10-1)+1);
+        
+        res = JSON.parse( 
+                Jsoup.connect("https://dapi.kakao.com/v2/search/image") 
                 .data('query',query) 
-                .header('X-Naver-Client-Id', naverId) 
-                .header('X-Naver-Client-Secret', naverPw) 
+                .data('sort', 'accuracy')
+                .header('Authorization', 'KakaoAK '+kakaoRes)
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .get() 
-                .text()).items.length;
-          
-        res1 = JSON.parse( 
-                Jsoup.connect("https://openapi.naver.com/v1/search/image") 
+                .text()).documents[Ran].doc_url;
+
+                result = JSON.stringify(res);
+                resultUrl = naverUrl(result);
+
+                return resultUrl;
+        } catch (err) {
+                Log.e(err);
+                return err;
+        }
+ };
+ 
+ kakaoVclip = (query) => {
+        try {
+
+        Ran = Math.floor(Math.random()*(10-1)+1);
+        
+        res = JSON.parse( 
+                Jsoup.connect("https://dapi.kakao.com/v2/search/vclip") 
                 .data('query',query) 
-                .header('X-Naver-Client-Id', naverId) 
-                .header('X-Naver-Client-Secret', naverPw) 
+                .data('sort', 'accuracy')
+                .header('Authorization', 'KakaoAK '+kakaoRes)
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .get() 
-                .text()).items[num].thumbnail;
-                
-                result = num+" / "+res0+" 이미지\n"+res1;
-                
-                return result;
+                .text()).documents[Ran].url;
+
+                result = JSON.stringify(res);
+                resultUrl = naverUrl(result);
+
+                return resultUrl;
         } catch (err) {
                 Log.e(err);
                 return err;
         }
  };
 
- naverNews = (query, num) => {
+ naverWews = (query) => {
         try {
-                res = JSON.parse( 
-                        Jsoup.connect("https://openapi.naver.com/v1/search/news.json") 
-                       .data('query',query) 
-                       .header('X-Naver-Client-Id', naverId) 
-                       .header('X-Naver-Client-Secret', naverPw) 
-                       .ignoreContentType(true) 
-                       .ignoreHttpErrors(true) 
-                       .get() 
-                       .text()).items[num];
-
-                       result = num+" / "+res.title+"\n"+res.link+"\n"+res.description;
-                       return result;
+          res = JSON.parse( 
+                Jsoup.connect("https://openapi.naver.com/v1/search/webkr.json") 
+                .data('query',query) 
+                .header('X-Naver-Client-Id', naverId) 
+                .header('X-Naver-Client-Secret', naverPw) 
+                .ignoreContentType(true) 
+                .ignoreHttpErrors(true) 
+                .get() 
+                .text()).items;
+                 return res;
+                 
         } catch (err) {
                 Log.e(err);
                 return err;
         }
- }
+ };
