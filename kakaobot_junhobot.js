@@ -25,7 +25,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }  
                 if (msg.startsWith("/KoGPT ")) {
                         if (msg.indexOf('/KoGPT') != -1) {
-                                replier.reply(kakaoKogpt(msg.slice(6)));
+                                replier.reply(kakaoKogpt(msg.slice(7)));
                         } else {
                         replier.reply("잘못된 문장 입니다.\nex) /KoGPT 카카오는 초코의 원료야");
                         }
@@ -145,18 +145,18 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
  kakaoKogpt = (query) => {
         try {
 
-        Ran = Math.floor(Math.random()*(10-1)+1);
+        //Ran = Math.floor(Math.random()*(10-1)+1);
         
         res = JSON.parse( 
                 Jsoup.connect("https://api.kakaobrain.com/v1/inference/kogpt/generation") 
                 .data('prompt',query) 
                 .data('max_tokens', 120)
-                .data('n', 10)
+                .data('n', 1)
                 .header('Authorization', 'KakaoAK '+kakaoRes)
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .post() 
-                .text()).generations[Ran].text;
+                .text()).generations.text;
 
                 //result = JSON.stringify(res);
 
