@@ -23,6 +23,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                                 replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
                         }
                 }  
+                if (msg.startsWith("/KoGPT ")) {
+                        if (msg.indexOf('/KoGPT') != -1) {
+                                replier.reply(kakaoKogpt(msg.slice(6)));
+                        } else {
+                        replier.reply("잘못된 문장 입니다.\nex) /KoGPT 카카오는 초코의 원료야");
+                        }
+                }
 
                 if (msg.startsWith("/이미지 ")) {
                         if (msg.indexOf('/이미지') != -1) {
@@ -133,6 +140,31 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 Log.e(err); 
                 return err;
         } 
+ };
+
+ kakaoKogpt = (query) => {
+        try {
+
+        Ran = Math.floor(Math.random()*(10-1)+1);
+        
+        res = JSON.parse( 
+                Jsoup.connect("https://api.kakaobrain.com/v1/inference/kogpt/generation") 
+                .data('prompt',query) 
+                .data('max_tokens', 120)
+                .header('Authorization', 'KakaoAK '+kakaoRes)
+                .ignoreContentType(true) 
+                .ignoreHttpErrors(true) 
+                .post() 
+                .text()).Generation[Ran].text;
+
+                result = JSON.stringify(res);
+                resultUrl = naverUrl(result);
+
+                return resultUrl;
+        } catch (err) {
+                Log.e(err);
+                return err;
+        }
  };
 
  kakaoImege = (query) => {
