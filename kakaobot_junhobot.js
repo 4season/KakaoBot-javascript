@@ -7,6 +7,13 @@ const scriptName = "Junho_Bot2";
   * (boolean) replier.reply(room, message, hideErrorToast = false) // 전송 성공시 true, 실패시 false 반환 
   * (string) imageDB.getProfileBase64() 
   * (string) packageName 
+  
+해야 할 일
+1. 에러 뜨면 재검색 돌리기
+2. 다음카페 뜨면 재검색 돌리기
+3. 음식추천 db짜기 & 기능 만들기
+4. 음식추천 사용가 추가하는 기능 만들기
+  
   */ 
 const Jsoup = org.jsoup.Jsoup; 
   
