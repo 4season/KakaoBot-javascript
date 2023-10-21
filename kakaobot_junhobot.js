@@ -55,12 +55,12 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
                 if (msg.startsWith("/웹검색 ")) {
                         if (msg.indexOf('/웹검색') != -1) {
-                            replier.reply(JSON.stringify(naverWews(msg.slice(5))));
+                            replier.reply(naverWebs(msg.slice(5)));
                         } else {
                               replier.reply("잘못된 검색 입니다.\nex) /웹검색 네이버");        
                         }
                 }
-                
+
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
                 }
@@ -149,14 +149,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         } 
  };
 
- kakaoKogpt = (query) => {
+    kakaoKogpt = (query) => {
         try {
 
         //Ran = Math.floor(Math.random()*(10-1)+1);
-        
+        Links = "https://api.kakaobrain.com/v1/inference/kogpt/generation";
+
         res = JSON.parse( 
-                Jsoup.connect("https://api.kakaobrain.com/v1/inference/kogpt/generation") 
-                .data('prompt',query) 
+                Jsoup.connect(Links) 
+                .data('prompt', query) 
                 .data('max_tokens', 120)
                 .data('n', 1)
                 .header('Authorization', 'KakaoAK '+kakaoRes)
@@ -165,9 +166,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 .post() 
                 .text()).generations.text;
 
-                //result = JSON.stringify(res);
+                result = JSON.stringify(res);
 
-                return res;
+                return result;
         } catch (err) {
                 Log.e(err);
                 return err;
@@ -176,34 +177,56 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
  kakaoImege = (query) => {
         try {
+          
+          Links = "https://dapi.kakao.com/v2/search/image";
+          
+          resTotal = JSON.parse( 
+                Jsoup.connect(Links) 
+                .data('query', query) 
+                .data('sort', 'accuracy')
+                .header('Authorization', 'KakaoAK '+kakaoRes)
+                .ignoreContentType(true) 
+                .ignoreHttpErrors(true) 
+                .get() 
+                .text()).meta.pageable_count;
 
-        Ran = Math.floor(Math.random()*(10-1)+1);
+        let Ran = Math.floor(Math.random()*(80-1)+1);
         
-        res = JSON.parse( 
-                Jsoup.connect("https://dapi.kakao.com/v2/search/image") 
-                .data('query',query) 
+         res = JSON.parse( 
+                Jsoup.connect(Links) 
+                .data('query', query) 
                 .data('sort', 'accuracy')
                 .header('Authorization', 'KakaoAK '+kakaoRes)
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
                 .get() 
                 .text()).documents[Ran].doc_url;
-
-                result = JSON.stringify(res);
-                resultUrl = naverUrl(result);
-
-                return resultUrl;
-        } catch (err) {
+              
+                strRes = JSON.stringify(res);
+                
+                if (strRes.search(/cafe.daum.net/g) != -1) {
+                  kakaoImege(query);
+                }
+                
+                resultUrl = naverUrl(strRes);
+                
+                if (strRes === undefined && res === undefined) {
+                  kakaoImege(query);
+                } else {
+                  return resultUrl;
+                }
+                
+            } catch (err) {
                 Log.e(err);
-                return err;
+                //return err;
         }
  };
- 
+
  kakaoVclip = (query) => {
         try {
 
-        Ran = Math.floor(Math.random()*(10-1)+1);
-        
+        Ran = Math.floor(Math.random()*(50-1)+1);
+
         res = JSON.parse( 
                 Jsoup.connect("https://dapi.kakao.com/v2/search/vclip") 
                 .data('query',query) 
@@ -213,6 +236,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 .ignoreHttpErrors(true) 
                 .get() 
                 .text()).documents[Ran].url;
+                
+                while (res == 'undefined') {
+                  kakaoVclip(query);
+                }
 
                 result = JSON.stringify(res);
                 resultUrl = naverUrl(result);
@@ -224,7 +251,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         }
  };
 
- naverWews = (query) => {
+ naverWebs = (query) => {
         try {
           res = JSON.parse( 
                 Jsoup.connect("https://openapi.naver.com/v1/search/webkr.json") 
@@ -236,7 +263,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 .get() 
                 .text()).items;
                  return res;
-                 
+
         } catch (err) {
                 Log.e(err);
                 return err;
