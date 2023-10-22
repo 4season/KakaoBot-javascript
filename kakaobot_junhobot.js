@@ -30,11 +30,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                                 replier.reply("잘못된 페이지 입니다.\nex) /사전 네이버 0");
                         }
                 }  
-                if (msg.startsWith("/KoGPT ")) {
-                        if (msg.indexOf('/KoGPT') != -1) {
-                                replier.reply(kakaoKogpt(msg.slice(7)));
+                if (msg.startsWith("/Karlo ")) {
+                        if (msg.indexOf('/Karlo') != -1) {
+                                msgS = msg.slice(7);
+                                msgsData = msgS.split(".");
+                                replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                         } else {
-                        replier.reply("잘못된 문장 입니다.\nex) /KoGPT 카카오는 초코의 원료야");
+                        replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
                         }
                 }
 
@@ -71,7 +73,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         }
 }
 
- naverUrl = (query) => { 
+naverUrl = (query) => { 
         try { 
                 res = JSON.parse( 
                         Jsoup.connect("https://openapi.naver.com/v1/util/shorturl") 
@@ -89,7 +91,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         } 
  }; 
 
-  naverSearch = (query, num) => { 
+naverSearch = (query, num) => { 
         try { 
                 links = "https://openapi.naver.com/v1/search/encyc.json";
                 res0 = JSON.parse( 
@@ -149,22 +151,22 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         } 
  };
 
-    kakaoKogpt = (query) => {
+kakaoKarlo = (prompt, negative_prompt) => {
         try {
 
-        //Ran = Math.floor(Math.random()*(10-1)+1);
-        Links = "https://api.kakaobrain.com/v1/inference/kogpt/generation";
+        Links = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
 
         res = JSON.parse( 
                 Jsoup.connect(Links) 
-                .data('prompt', query) 
-                .data('max_tokens', 120)
-                .data('n', 1)
+                .data('prompt', prompt) 
+                .data('negative_prompt', negative_prompt)
+                .data('upscale', true)
                 .header('Authorization', 'KakaoAK '+kakaoRes)
+                .header('Content-Type', 'application/json')
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
-                .post() 
-                .text()).generations.text;
+                .get() 
+                .text()).images.image;
 
                 result = JSON.stringify(res);
 
@@ -175,25 +177,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         }
  };
 
- kakaoImege = (query) => {
+kakaoImege = (query) => {
         try {
           
-          Links = "https://dapi.kakao.com/v2/search/image";
-          
-          resTotal = JSON.parse( 
-                Jsoup.connect(Links) 
-                .data('query', query) 
-                .data('sort', 'accuracy')
-                .header('Authorization', 'KakaoAK '+kakaoRes)
-                .ignoreContentType(true) 
-                .ignoreHttpErrors(true) 
-                .get() 
-                .text()).meta.pageable_count;
+        Links = "https://dapi.kakao.com/v2/search/image";
 
         let Ran = Math.floor(Math.random()*(80-1)+1);
         
-         res = JSON.parse( 
-                Jsoup.connect(Links) 
+        res = JSON.parse(
+                Jsoup.connect(Links)
                 .data('query', query) 
                 .data('sort', 'accuracy')
                 .header('Authorization', 'KakaoAK '+kakaoRes)
@@ -222,7 +214,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         }
  };
 
- kakaoVclip = (query) => {
+kakaoVclip = (query) => {
         try {
 
         Ran = Math.floor(Math.random()*(50-1)+1);
@@ -251,7 +243,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         }
  };
 
- naverWebs = (query) => {
+naverWebs = (query) => {
         try {
           res = JSON.parse( 
                 Jsoup.connect("https://openapi.naver.com/v1/search/webkr.json") 
