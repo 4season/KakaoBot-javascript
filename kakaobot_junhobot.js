@@ -158,7 +158,7 @@ kakaoKarlo = (prompt, negative_prompt) => {
 
         res = JSON.parse( 
                 Jsoup.connect(Links) 
-                .data('{"prompt": '+prompt+',"negative_prompt": '+negative_prompt+',"upscale": true}')
+                .data('prompt', prompt, 'negative_prompt', negative_prompt, 'upscale', true)
                 .header('Authorization', 'KakaoAK '+kakaoRes)
                 .header('Content-Type', 'application/json')
                 .ignoreContentType(true) 
