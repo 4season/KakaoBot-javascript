@@ -36,7 +36,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                                 msgsData = msgS.split(".");
                                 replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                         } else {
-                        replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
+                        replier.reply("잘못된 문장 입니다.\nex) /Karlo .A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
                         }
                 }
 
@@ -158,14 +158,12 @@ kakaoKarlo = (prompt, negative_prompt) => {
 
         res = JSON.parse( 
                 Jsoup.connect(Links) 
-                .data('prompt', prompt) 
-                .data('negative_prompt', negative_prompt)
-                .data('upscale', true)
+                .data('{"prompt": '+prompt+',"negative_prompt": '+negative_prompt+',"upscale": true}')
                 .header('Authorization', 'KakaoAK '+kakaoRes)
                 .header('Content-Type', 'application/json')
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true) 
-                .get() 
+                .post() 
                 .text()).images.image;
 
                 result = JSON.stringify(res);
