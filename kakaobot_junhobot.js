@@ -155,14 +155,21 @@ kakaoKarlo = (prompt, negative_prompt) => {
         try {
 
         Links = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
-        Prompts = prompt.toString();
-        Negative_prompts = negative_prompt.toString();
-        json = {
-                "prompt": Prompts,
-                "negative_prompt": Negative_prompts,
-                "upscale": true
+        //Prompts = toString(prompt);
+        //Negative_prompts = toString(negative_prompt);
+        jsons = {
+                "prompt": prompt,
+                "negative_prompt": negative_prompt,
+                "prior_num_inference_steps": 100,
+                "prior_guidance_scale": 5.5,
+                "image_quality": 100,
+                "num_inference_steps": 100,
+                "guidance_scale": 12.5,
+                "scheduler": "decoder_ddim_v_prediction",
+                "upscale": true,
+                "nsfw_checker": false
         };
-        promptJson = JSON.stringify(json);
+        promptJson = JSON.stringify(jsons);
 
         res = JSON.parse( 
                 Jsoup.connect(Links)
@@ -172,10 +179,11 @@ kakaoKarlo = (prompt, negative_prompt) => {
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true)
                 .post()
-                .text());
+                .text()).images[0].image;
 
-                result = JSON.stringify(res)+"\n\n"+promptJson;
-
+                sum = JSON.stringify(res);
+                result = naverUrl(sum)+"\n\n"+promptJson;
+                
                 return result;
         } catch (err) {
                 Log.e(err);
