@@ -38,11 +38,12 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }  
                 if (msg.startsWith("/Karlo ")) {
                         if (msg.indexOf('/Karlo') != -1) {
+                                replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±10초)");
                                 msgS = msg.slice(7);
                                 msgsData = msgS.split(".");
                                 replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                         } else {
-                        replier.reply("잘못된 문장 입니다.\nex) /Karlo .A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
+                        replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
                         }
                 }
 
@@ -188,7 +189,8 @@ kakaoKarlo = (prompt, negative_prompt) => {
                 "image_quality": 100,
                 "num_inference_steps": 100,
                 "guidance_scale": 12.5,
-                "scheduler": "decoder_ddim_v_prediction",
+                "scheduler": "decoder_ddpm_v_prediction",
+                "scale": 4,
                 "upscale": true,
                 "nsfw_checker": false
         };
