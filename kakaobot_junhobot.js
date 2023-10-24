@@ -77,7 +77,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         if (msg.indexOf('/Eval') != -1) {
                                 if (msg.search(/naverId\;|naverPw\;|kakaoRes\;|securityBox\;|securityName\;/g) != -1 && securityName.indexOf(sender) == -1) {
                                         replier.reply("경고!\n보안접근 발생. "+sender+"님은 접근권한이 없습니다.");
-                                        securityBox.push([sender, msg]);
+                                        securityBox.push([sender, ' '+msg+'\n']);
                                 } else if (securityName.indexOf(sender) != -1) {
                                         replier.reply(eval(msg.slice(6)));
                                 } else {
