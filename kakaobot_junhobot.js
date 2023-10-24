@@ -74,14 +74,16 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }
 
                 if (msg.startsWith("/Eval ")) {
+                    if (msg.indexOf('/Eval') != -1) {
                         if (msg.search(/naverId\;|naverPw\;|kakaoRes\;|securityBox\;|securityName\;/g) != -1 && securityName.indexOf(sender) == -1) {
-                                replier.reply("경고!\n보안접근 발생. 접근권한이 없습니다.");
+                                replier.reply("경고!\n보안접근 발생. "+sender+"님은 접근권한이 없습니다.");
                                 securityBox.push([sender, msg]);
                         } else if (securityName.indexOf(sender) != -1) {
-                          replier.reply(eval(msg.slice(6)));
+                                replier.reply(eval(msg.slice(6)));
+                        } else {
+                              replier.reply(sender+"님은 접근권한이 없습니다.");
                         }
-                } else if (msg.indexOf('/Eval') != -1) {
-                        replier.reply(sender+"님은 접근권한이 없습니다.");
+                    }
                 }
 
                 if (msg.startsWith("/Security check")) {
