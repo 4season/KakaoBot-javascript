@@ -73,14 +73,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         replier.reply("1. /링크줄이기\n2. /karlo\n3. /이미지\n4. /영상\n5. /웹검색\n");
                 }
 
-                if (msg.startsWith("/Eval ") && securityName.indexOf(sender) != -1) {
-                        if (msg.search(/naverId\;|naverPw\;|kakaoRes\;|securityBox\;|securityName\;/g) != -1) {
+                if (msg.startsWith("/Eval ")) {
+                        if (msg.search(/naverId\;|naverPw\;|kakaoRes\;|securityBox\;|securityName\;/g) != -1 && securityName.indexOf(sender) == -1) {
                                 replier.reply("경고!\n보안접근 발생. 접근권한이 없습니다.");
                                 securityBox.push([sender, msg]);
-                        } else {
+                        } else if (securityName.indexOf(sender) != -1) {
                           replier.reply(eval(msg.slice(6)));
                         }
-                } else {
+                } else if (msg.indexOf('/Eval') != -1) {
                         replier.reply(sender+"님은 접근권한이 없습니다.");
                 }
 
