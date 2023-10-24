@@ -71,7 +71,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }
 
                 if (msg.startsWith("/명령어")) {
-                        replier.reply("1. /링크줄이기\n2. /karlo\n3. /이미지\n4. /영상\n5. /웹검색\n");
+                        replier.reply("1. /링크줄이기\n2. /Karlo\n3. /이미지\n4. /영상\n5. /웹검색\n");
                 }
 
                 if (msg.startsWith("/Eval ")) {
