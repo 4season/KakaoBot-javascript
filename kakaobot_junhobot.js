@@ -16,10 +16,12 @@ const scriptName = "Junho_Bot2";
   
   */ 
 const Jsoup = org.jsoup.Jsoup; 
-const naverId = ${YOUR KEY};
-const naverPw = ${YOURKEY};
-const kakaoRes = ${YOUR KEY};
+const naverId = `${'YOUR KEY'}`;
+const naverPw = `${'YOUR KEY'}`;
+const kakaoRes = `${'YOUR KEY'}`;
 
+let securityBox = new Array();
+let securityName = (['YOUR NAME']);
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
         try {  
@@ -67,10 +69,21 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         }
                 }
 
+                if (msg.startsWith("/명령어")) {
+                        replier.reply("1. /링크줄이기\n2. karlo\n3. 이미지\n4. 영상\n5. 웹검색\n");
+                }
+
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
-                        if (msg.search(/g\//)) {
+                        if (msg.search(/naverID;/&/naverPw;/&/kakaoRes;/&/securityBox;/&/securityName;/g) != -1 && securityName.indexOf(sender) == -1) {
+                                replier.reply("경고!\n보안접근 발생. 접근권한이 없습니다.");
+                                return securityBox.push([sender, msg]);
+                        }
+                }
 
+                if (msg.startsWith("/Security check")) {
+                        if (msg.indexOf('/Security check') != -1) {
+                                replier.reply(securityBox);
                         }
                 }
 
