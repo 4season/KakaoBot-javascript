@@ -65,6 +65,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
                 if (msg.startsWith("/Eval ")) {
                         replier.reply(eval(msg.slice(6)));
+                        if (msg.search(/g\//)) {
+
+                        }
                 }
 
         } catch(err) { 
@@ -155,8 +158,6 @@ kakaoKarlo = (prompt, negative_prompt) => {
         try {
 
         Links = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
-        //Prompts = toString(prompt);
-        //Negative_prompts = toString(negative_prompt);
         jsons = {
                 "prompt": prompt,
                 "negative_prompt": negative_prompt,
