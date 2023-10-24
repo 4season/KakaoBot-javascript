@@ -155,22 +155,26 @@ kakaoKarlo = (prompt, negative_prompt) => {
         try {
 
         Links = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
+        Prompts = prompt.toString();
+        Negative_prompts = negative_prompt.toString();
         json = {
-                "prompt": prompt,
-                "negative_prompt": negative_prompt,
+                "prompt": Prompts,
+                "negative_prompt": Negative_prompts,
                 "upscale": true
         };
+        promptJson = JSON.stringify(json);
+
         res = JSON.parse( 
                 Jsoup.connect(Links)
-                .requestBody(json.toString())
+                .requestBody(promptJson)
                 .header('Authorization', 'KakaoAK '+kakaoRes)
                 .header('Content-Type', 'application/json')
                 .ignoreContentType(true) 
                 .ignoreHttpErrors(true)
                 .post()
-                .text()).images.image;
+                .text());
 
-                result = JSON.stringify(res);
+                result = JSON.stringify(res)+"\n\n"+promptJson;
 
                 return result;
         } catch (err) {
