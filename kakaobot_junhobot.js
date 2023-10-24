@@ -16,7 +16,11 @@ const scriptName = "Junho_Bot2";
   
   */ 
 const Jsoup = org.jsoup.Jsoup; 
-  
+const naverId = ${YOUR KEY};
+const naverPw = ${YOURKEY};
+const kakaoRes = ${YOUR KEY};
+
+
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) { 
         try {  
           var data = msg.split(" ");
