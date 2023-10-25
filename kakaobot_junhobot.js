@@ -38,12 +38,26 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }  
                 if (msg.startsWith("/Karlo ")) {
                         if (msg.indexOf('/Karlo') != -1) {
-                                replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±10초)");
+                                replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±10초)\n한국어도 가능합니다. 하지만 번역이므로 가능한 영어를 입력해 주세요.");
                                 msgS = msg.slice(7);
                                 msgsData = msgS.split(".");
+                                const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+                                if (korean.test(msgsData[0]) == true) {
+                                        translate0 = naverPapago(msgsData[0]);
+                                        translate1 = naverPapago(msgsData[1]);
+                                        replier.reply(kakaoKarlo(translate0, translate1));
+                                }
                                 replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                         } else {
                         replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
+                        }
+                }
+
+                if (msg.startsWith("/Papago ")) {
+                        if (msg.indexOff('/Papago') != -1) {
+                                replier.reply(naverPapago(msg.slice(9)));
+                        } else {
+                                replier.reply("잘못된 문장 입니다.\nex) /Papago 네이버");
                         }
                 }
 
@@ -71,7 +85,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }
 
                 if (msg.startsWith("/명령어")) {
-                        replier.reply("1. /링크줄이기\n2. /Karlo\n3. /이미지\n4. /영상\n5. /웹검색\n");
+                        replier.reply("1. /링크줄이기 (링크) - 링크를 줄입니다.\n2. /Karlo (추가할 키워드).(제거할 키워드) - AI그림을 그립니다.\n3. /Papago (한국어) - 한국어를 영어로 번역합니다.\n4. /이미지 (키워드) - 키워드에 해당하는 이미지를 검색합니다.\n5. /영상 (키워드) - 키워드에 해당하는 영상을 검색합니다.\n6. /웹검색 (키워드) - 키워드에 해당하는 웹문서를 검색합니다.\n");
                 }
 
                 if (msg.startsWith("/Eval ")) {
@@ -93,7 +107,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                         }
                 }
 
-        } catch(err) { 
+        } catch (err) { 
                 Log.e(err); 
                 replier.reply(err); 
         }
@@ -294,6 +308,28 @@ naverWebs = (query) => {
                 .get() 
                 .text()).items;
                  return res;
+
+        } catch (err) {
+                Log.e(err);
+                return err;
+        }
+ };
+
+ naverPapago = (text) => {
+        try {
+                res = JSON.parse(
+                        Jsoup.connect("https://openapi.naver.com/v1/papago/n2mt")
+                        .data("source", "ko")
+                        .data("target", "en")
+                        .data("text", text)
+                        .header('X-Naver-client-Id', naverId)
+                        .header('X-Naver-client-Secret', naverPw)
+                        .ignoreContentType(ture)
+                        .ignoreHttpErrors(ture)
+                        .post()
+                        .text()
+                ).result.translatedtext;
+                return res;
 
         } catch (err) {
                 Log.e(err);
