@@ -41,21 +41,22 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                                 replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±10초)\n한국어도 가능합니다. 하지만 번역이므로 가능한 영어를 입력해 주세요.");
                                 msgS = msg.slice(7);
                                 msgsData = msgS.split(".");
-                                const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+                                korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;
                                 if (korean.test(msgsData[0]) == true) {
                                         translate0 = naverPapago(msgsData[0]);
                                         translate1 = naverPapago(msgsData[1]);
                                         replier.reply(kakaoKarlo(translate0, translate1));
+                                } else {
+                                        replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                                 }
-                                replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                         } else {
                         replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
                         }
                 }
 
                 if (msg.startsWith("/Papago ")) {
-                        if (msg.indexOff('/Papago') != -1) {
-                                replier.reply(naverPapago(msg.slice(9)));
+                        if (msg.indexOf('/Papago') != -1) {
+                                replier.reply(naverPapago(msg.slice(8)));
                         } else {
                                 replier.reply("잘못된 문장 입니다.\nex) /Papago 네이버");
                         }
@@ -222,7 +223,7 @@ kakaoKarlo = (prompt, negative_prompt) => {
 
                 sum = JSON.stringify(res);
                 result = naverUrl(sum)+"\n\n"+promptJson;
-                
+
                 return result;
         } catch (err) {
                 Log.e(err);
@@ -232,11 +233,11 @@ kakaoKarlo = (prompt, negative_prompt) => {
 
 kakaoImege = (query) => {
         try {
-          
+
         Links = "https://dapi.kakao.com/v2/search/image";
 
         let Ran = Math.floor(Math.random()*(80-1)+1);
-        
+
         res = JSON.parse(
                 Jsoup.connect(Links)
                 .data('query', query) 
@@ -246,21 +247,21 @@ kakaoImege = (query) => {
                 .ignoreHttpErrors(true) 
                 .get() 
                 .text()).documents[Ran].doc_url;
-              
+
                 strRes = JSON.stringify(res);
-                
+
                 if (strRes.search(/cafe.daum.net/g) != -1) {
                   kakaoImege(query);
                 }
-                
+
                 resultUrl = naverUrl(strRes);
-                
+
                 if (strRes === "undefined" && res === undefined) {
                   kakaoImege(query);
                 } else {
                   return resultUrl;
                 }
-                
+
             } catch (err) {
                 Log.e(err);
                 //return err;
@@ -281,7 +282,7 @@ kakaoVclip = (query) => {
                 .ignoreHttpErrors(true) 
                 .get() 
                 .text()).documents[Ran].url;
-                
+
                 while (res == 'undefined') {
                   kakaoVclip(query);
                 }
@@ -315,7 +316,7 @@ naverWebs = (query) => {
         }
  };
 
- naverPapago = (text) => {
+naverPapago = (text) => {
         try {
                 res = JSON.parse(
                         Jsoup.connect("https://openapi.naver.com/v1/papago/n2mt")
@@ -324,12 +325,14 @@ naverWebs = (query) => {
                         .data("text", text)
                         .header('X-Naver-client-Id', naverId)
                         .header('X-Naver-client-Secret', naverPw)
-                        .ignoreContentType(ture)
-                        .ignoreHttpErrors(ture)
+                        .ignoreContentType(true)
+                        .ignoreHttpErrors(true)
                         .post()
                         .text()
-                ).result.translatedtext;
-                return res;
+                ).result;
+                
+                result = JSON.stringify(res);
+                return result;
 
         } catch (err) {
                 Log.e(err);
