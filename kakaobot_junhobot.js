@@ -318,11 +318,16 @@ naverWebs = (query) => {
 
 naverPapago = (text) => {
         try {
+                jsons = {
+                        "source": "ko",
+                        "target": "en",
+                        "text": text
+                };
+                textJson = JSON.stringify(jsons);
+
                 res = JSON.parse(
                         Jsoup.connect("https://openapi.naver.com/v1/papago/n2mt")
-                        .data("source", "ko")
-                        .data("target", "en")
-                        .data("text", text)
+                        .requestBody(textJson)
                         .header('X-Naver-client-Id', naverId)
                         .header('X-Naver-client-Secret', naverPw)
                         .ignoreContentType(true)
