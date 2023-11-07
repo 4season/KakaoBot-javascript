@@ -50,7 +50,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                                         replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                                 }
                         } else {
-                        replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n영어만 사용 가능하며, 추가할문장과 제거할 문장은 '.'으로 구분합니다.");
+                        replier.reply("잘못된 문장 입니다.\nex) /Karlo A cat whit white fur.ugly face, human\n한국어도 사용가능하지만 번역이므로 가능한 영어 사용을 추천드립니다.\n추가할문장과 제거할 문장은 '.'으로 구분합니다.");
                         }
                 }
 
@@ -200,11 +200,14 @@ kakaoKarlo = (prompt, negative_prompt) => {
                 "prompt": prompt,
                 "negative_prompt": negative_prompt,
                 "prior_num_inference_steps": 100,
-                "prior_guidance_scale": 5.5,
+                "prior_guidance_scale": 16,
                 "image_quality": 100,
                 "num_inference_steps": 100,
                 "guidance_scale": 12.5,
+                "width": 640,
+                "height": 416,
                 "scheduler": "decoder_ddpm_v_prediction",
+                "image_format": "webp",
                 "scale": 4,
                 "upscale": true,
                 "nsfw_checker": false
@@ -282,13 +285,15 @@ kakaoVclip = (query) => {
                 .ignoreHttpErrors(true) 
                 .get() 
                 .text()).documents[Ran].url;
-
-                while (res == 'undefined') {
-                  kakaoVclip(query);
-                }
-
+                
                 result = JSON.stringify(res);
                 resultUrl = naverUrl(result);
+
+                if (strRes === "undefined" && res === undefined) {
+                  kakaoVclip(query);
+                } else {
+                  return resultUrl;
+                }
 
                 return resultUrl;
         } catch (err) {
@@ -318,26 +323,21 @@ naverWebs = (query) => {
 
 naverPapago = (text) => {
         try {
-                jsons = {
-                        "source": "ko",
-                        "target": "en",
-                        "text": text
-                };
-                textJson = JSON.stringify(jsons);
-
+                
+                data = "source=ko&target=en&text="+text;
+                dataStr = data.toString();
+                
                 res = JSON.parse(
                         Jsoup.connect("https://openapi.naver.com/v1/papago/n2mt")
-                        .requestBody(textJson)
+                        .requestBody(dataStr)
                         .header('X-Naver-client-Id', naverId)
                         .header('X-Naver-client-Secret', naverPw)
                         .ignoreContentType(true)
                         .ignoreHttpErrors(true)
                         .post()
                         .text()
-                ).result;
-                
-                result = JSON.stringify(res);
-                return result;
+                ).message.result.translatedText;
+                return res;
 
         } catch (err) {
                 Log.e(err);
