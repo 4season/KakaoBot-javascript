@@ -19,6 +19,7 @@ const Jsoup = org.jsoup.Jsoup;
 const naverId = `${'YOUR KEY'}`;
 const naverPw = `${'YOUR KEY'}`;
 const kakaoRes = `${'YOUR KEY'}`;
+const imageBb = `${'YOUR KEY'}`;
 
 let securityBox = new Array();
 let securityName = (['YOUR NAME']);
@@ -38,15 +39,17 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }  
                 if (msg.startsWith("/Karlo ")) {
                         if (msg.indexOf('/Karlo') != -1) {
-                                replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±10초)\n한국어도 가능합니다. 하지만 번역이므로 가능한 영어를 입력해 주세요.");
                                 msgS = msg.slice(7);
-                                msgsData = msgS.split(".");
+                                msgsData = msgS.split("|");
                                 korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;
                                 if (korean.test(msgsData[0]) == true) {
                                         translate0 = naverPapago(msgsData[0]);
                                         translate1 = naverPapago(msgsData[1]);
+                                        replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±15초)\n한국어도 가능합니다. 하지만 번역이므로 가능한 영어를 입력해 주세요.\n\n"+"키워드: "+translate0+"\n\n제거키워드: "+translate1);
                                         replier.reply(kakaoKarlo(translate0, translate1));
+                                        
                                 } else {
+                                        replier.reply("이미지를 생성중입니다...\n잠시만 기다려주세요. (약 ±15초)\n한국어도 가능합니다. 하지만 번역이므로 가능한 영어를 입력해 주세요.\n\n"+"키워드: "+msgsData[0]+"\n\n제거키워드: "+msgsData[1]);
                                         replier.reply(kakaoKarlo(msgsData[0], msgsData[1]));
                                 }
                         } else {
@@ -86,7 +89,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
                 }
 
                 if (msg.startsWith("/명령어")) {
-                        replier.reply("1. /링크줄이기 (링크) - 링크를 줄입니다.\n2. /Karlo (추가할 키워드).(제거할 키워드) - AI그림을 그립니다.\n3. /Papago (한국어) - 한국어를 영어로 번역합니다.\n4. /이미지 (키워드) - 키워드에 해당하는 이미지를 검색합니다.\n5. /영상 (키워드) - 키워드에 해당하는 영상을 검색합니다.\n6. /웹검색 (키워드) - 키워드에 해당하는 웹문서를 검색합니다.\n");
+                        replier.reply("1. /링크줄이기 (링크) - 링크를 줄입니다.\n2. /사전 (검색어) (페이지) - 사전검색을 진행합니다.\n3. /Karlo (추가할 키워드)|(제거할 키워드) - AI그림을 그립니다.\n4. /Papago (한국어) - 한국어를 영어로 번역합니다.\n5. /이미지 (키워드) - 키워드에 해당하는 이미지를 검색합니다.\n6. /영상 (키워드) - 키워드에 해당하는 영상을 검색합니다.\n7. /웹검색 (키워드) - 키워드에 해당하는 웹문서를 검색합니다.\n");
                 }
 
                 if (msg.startsWith("/Eval ")) {
@@ -200,17 +203,16 @@ kakaoKarlo = (prompt, negative_prompt) => {
                 "prompt": prompt,
                 "negative_prompt": negative_prompt,
                 "prior_num_inference_steps": 100,
-                "prior_guidance_scale": 16,
+                "prior_guidance_scale": 5,
                 "image_quality": 100,
                 "num_inference_steps": 100,
-                "guidance_scale": 12.5,
-                "width": 640,
-                "height": 416,
+                "guidance_scale": 8.5,
                 "scheduler": "decoder_ddpm_v_prediction",
-                "image_format": "webp",
-                "scale": 4,
+                "width": 400,
+                "height": 200,
                 "upscale": true,
-                "nsfw_checker": false
+                "nsfw_checker": false,
+                "return_type": "base64_string"
         };
         promptJson = JSON.stringify(jsons);
 
@@ -223,9 +225,20 @@ kakaoKarlo = (prompt, negative_prompt) => {
                 .ignoreHttpErrors(true)
                 .post()
                 .text()).images[0].image;
-
-                sum = JSON.stringify(res);
-                result = naverUrl(sum)+"\n\n"+promptJson;
+              
+        resBb = JSON.parse( 
+                Jsoup.connect('https://api.imgbb.com/1/upload')
+                .data('key', imageBb)
+                .data('image', res)
+                .header('Content-Type', 'application/x-www-form-urlencoded')
+                .ignoreContentType(true) 
+                .ignoreHttpErrors(true)
+                .post()
+                .text()).data.url_viewer;
+                
+                sumBb = JSON.stringify(resBb);
+                
+                result = naverUrl(sumBb);
 
                 return result;
         } catch (err) {
